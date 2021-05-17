@@ -3,6 +3,8 @@ This is a GUI made by PyQt5, numpy and scipy by Reza Ranjbar Choubeh to calculat
 The GUI reads the xlsx files exported by Biotek Gen5 software.
 If you modify the code in Data.py, you can use xlsx files formatted in a different way.
 
+[Screenshot of the GUI](Growth-Rate-Analysis/Docs/Screenshots/Main Window.png)
+
 # Model
 The GUI fits the selected part of the growth curve to `amp*2^(k*t) + bg` in which the *amp* is the amplitude, the *k* is the doubting time, and the *bg* is the background level noise.
 # Usage
