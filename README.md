@@ -5,5 +5,6 @@ If you modify the code in Data.py, you can use xlsx files formatted in a differe
 
 # Usage
 ## Loading the file
-by clicking on the brow button a dialogue will appear in the directory in which the Python files are located.
+1- By clicking on the *brows* button a dialogue will appear in the directory in which the Python files are located, then you can find the xlsx file.
+2- 
 
