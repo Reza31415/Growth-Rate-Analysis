@@ -6,17 +6,19 @@ If you modify the code in Data.py, you can use xlsx files formatted in a differe
 ![Screenshot of the GUI](https://github.com/Reza31415/Growth-Rate-Analysis/blob/main/Docs/Screenshots/Main%20Window.png)
 
 # Model
-The GUI fits the selected part of the growth curve to `amp*2^(k*t) + bg` in which the *amp* is the amplitude, the *k* is the doubting time, and the *bg* is the background level noise.
+The GUI fits the selected part of the growth curve to `amp*2^(k*t) + bg` in which the *amp* is the amplitude, the *k* is the doubling time, and the *bg* is the background level noise.
 # Usage
 ## Loading the file
 By clicking on the **brows** button a dialogue will appear in the directory in which the Python files are located, then you can find the xlsx file.
 ## Initial Calculations
 After loading the file, the GUI calculates the time window during which the growth rate is exponential. It detects this region by:
+
 1- First fitting the growth rate with cubic spline to get a smooth curve.
+
 2- Calculating the second derivative of growth rate. When the growth stops being exponential the second derivative reaches its maximum. A time window is chosen begining from zero till the time at which the second derivative reaches its maximum.
 ## Elements of GUI
 ### Plot of the growth curve
-After initial calculation of the desired time window, on the left hand side of the screen the plot of the growth curve is seen. On the button of this plot you see an array of buttons. Upon clicking on them, the data associated with the selected well is displayed.
+After initial calculation of the desired time window, on the left hand side of the screen the plot of the growth curve is seen. On the bottom of this plot you see an array of buttons. Upon clicking on them, the data associated with the selected well is displayed.
 ### The Tabs: plot of derivatives
 On the right hand side of the screen, five tabs appear. You can reorder the tabs if desired by dragging them to left or right.
 The first tab show the normalized first and second derivative of the growth rate and the fitted spline curve to the growth curve. On the top plot you can select a time window and then by pressing **Update the time window for current selection** someone can change the default calculated time window for the current window. If someone chooses to press **Use the same time window for all** then the chosen time window will be used for all other wells too.
