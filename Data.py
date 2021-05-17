@@ -31,8 +31,10 @@ class Data(QtWidgets.QMainWindow):
     
     def __init__(self, filename):
         #Reads which rows in the excel file the data starts and ends
-        self.r1 = 30
-        self.r2 = 360
+        
+
+                
+
         self.data_dict = {}
         self.temperature = []
         self.time = []
@@ -46,6 +48,21 @@ class Data(QtWidgets.QMainWindow):
                 self.cols.append(f'{i}{j+1}')
                 
         self.df = pd.read_excel(self.filename, names = self.cols)
+        
+        collect = []
+        count = 0
+        for index, i in enumerate(self.df['temp']):
+            if (type(i) == float or type(i) == int):
+                if not np.isnan(i) and count == 0:
+                    count = 1
+                    collect.append(index)
+                elif not np.isnan(i):
+                    collect.append(index)
+                elif np.isnan(i) and count == 1:
+                    break
+                
+        self.r1 = collect[0]
+        self.r2 = collect[-1]      
         self.temperature = self.df['temp'].values[self.r1:self.r2]
 
         #Read the time axis
