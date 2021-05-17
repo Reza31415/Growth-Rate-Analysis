@@ -7,6 +7,8 @@ If you modify the code in Data.py, you can use xlsx files formatted in a differe
 
 # Model
 The GUI fits the selected part of the growth curve to `amp*2^(k*t) + bg` in which the *amp* is the amplitude, the *k* is the doubting time, and the *bg* is the background level noise.
+
+![test](/Docs/Screenshots/Main Window.png)
 # Usage
 ## Loading the file
 By clicking on the **brows** button a dialogue will appear in the directory in which the Python files are located, then you can find the xlsx file.
