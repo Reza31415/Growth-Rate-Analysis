@@ -22,7 +22,7 @@ After initial calculation of the desired time window, on the left hand side of t
 ### The Tabs: plot of derivatives
 On the right hand side of the screen, five tabs appear. You can reorder the tabs if desired by dragging them to left or right.
 The first tab show the normalized first and second derivative of the growth rate and the fitted spline curve to the growth curve. On the top plot you can select a time window and then by pressing **Update the time window for current selection** someone can change the default calculated time window for the current window. If someone chooses to press **Use the same time window for all** then the chosen time window will be used for all other wells too.
-By clicking the **Reset time windows** on the panel on right, the time windows reset to the default calculate ones. If someone is not happy with the smoothness of the second derivative, then can use the *slider* on right to achieve a smoother curve to find where the second derivative reaches its maximum. 
+By clicking the **Reset time windows** on the panel on right, the time windows reset to the default calculated ones. If someone is not happy with the smoothness of the second derivative, then can use the *slider* on the right to achieve a smoother curve to find where the second derivative reaches its maximum. 
 ### The Tabs: Doubling times.
 After pressing **Start fit** button, the doubling times are shown here in minutes. The average and standard deviations of each column or row is also displayed. Each time the **Start fit** is pressed the doubling times are also saved on disk.
 ### The Tabs: Plot of temperature
