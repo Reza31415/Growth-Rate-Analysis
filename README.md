@@ -13,7 +13,7 @@ By clicking on the **brows** button a dialogue will appear in the directory in w
 ## Initial Calculations
 After loading the file, the GUI calculates the time window during which the growth rate is exponential. It detects this region by:
 
-1- First fitting the growth rate with cubic spline to get a smooth curve.
+1- First fitting the growth rate with spline of degree five to get a smooth curve.
 
 2- Calculating the second derivative of growth rate. When the growth stops being exponential the second derivative reaches its maximum. A time window is chosen begining from zero till the time at which the second derivative reaches its maximum.
 ## Elements of GUI
