@@ -1,5 +1,5 @@
 # Introduction
-This is a GUI made by PyQt5, numpy and scipy by Reza Ranjbar Choubeh to calculate the doubling time of yeast while they grow exponentially.
+This is a GUI made using PyQt5, numpy and scipy to calculate the doubling time of yeast while they grow exponentially.
 The GUI reads the xlsx files exported by Biotek Gen5 software.
 If you modify the code in Data.py, you can use xlsx files formatted in a different way.
 
