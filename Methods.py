@@ -459,7 +459,8 @@ class Methods(Messages):
         self.text_file_name = str(datetime.datetime.now()) 
         self.text_file_name = self.text_file_name[0:-7] 
         self.text_file_name = self.text_file_name.replace(':', '-')
-        with open(f'fitting_results  {self.text_file_name}.txt','w') as text_file:
+        self.text_file_name = self.text_file_name.replace(' ', '_')
+        with open(f'fitting_results_{self.text_file_name}.txt','w') as text_file:
             text_file.write('The doubling times are in minutes\n')
             for key in self.result_fit_dtime:
                 text_file.writelines(f'{key}:{self.result_fit_dtime[key]}\n')
