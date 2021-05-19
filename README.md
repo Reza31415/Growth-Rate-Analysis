@@ -4,7 +4,7 @@ You must have PyQt5, Numpy, Scipy, Matplotlib, and Pandas installed to use this 
 The GUI reads the xlsx files exported by Biotek Gen5 software.
 If you modify the code in Data.py, you can use xlsx files formatted in a different way.
 
-![Screenshot of the GUI](https://github.com/Reza31415/Growth-Rate-Analysis/blob/main/Docs/Screenshots/Main%20Window.png)
+![Screenshot of the GUI](https://github.com/Reza31415/Growth-Rate-Analysis/blob/main/Docs/Screenshots/Main%20Window2.png)
 
 # Model
 The GUI fits the selected part of the growth curve to `amp*2^(k*t) + bg` in which the *amp* is the amplitude, the *k* is the doubling time, and the *bg* is the background level noise.
