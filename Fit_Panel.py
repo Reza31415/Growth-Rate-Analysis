@@ -32,7 +32,7 @@ class Fit_Panel(QtWidgets.QMainWindow, Messages):
         
 
         self.btn_start_fit = QtWidgets.QPushButton('Start fitting')
-        self.btn_brows = QtWidgets.QPushButton('Brows')
+        self.btn_brows = QtWidgets.QPushButton('Import Data')
         self.btn_reset_tw = QtWidgets.QPushButton('Reset time windows')
 
         
