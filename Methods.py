@@ -336,13 +336,13 @@ class Methods(Messages):
                     
                     
             
-            for col in range(12):
-                self.tab.table_OD.setItem(8, col, QtWidgets.QTableWidgetItem(f'{round(np.mean(final_od_matrix[:,col]),2)}'))  
-                self.tab.table_OD.setItem(9, col, QtWidgets.QTableWidgetItem(f'{round(np.std(final_od_matrix[:,col]),2)}'))  
+            # for col in range(12):
+            #     self.tab.table_OD.setItem(8, col, QtWidgets.QTableWidgetItem(f'{round(np.mean(final_od_matrix[:,col]),2)}'))  
+            #     self.tab.table_OD.setItem(9, col, QtWidgets.QTableWidgetItem(f'{round(np.std(final_od_matrix[:,col]),2)}'))  
                 
-            for row in range(8):
-                self.tab.table_OD.setItem(row, 12, QtWidgets.QTableWidgetItem(f'{round(np.mean(final_od_matrix[row,:]),2)}'))  
-                self.tab.table_OD.setItem(row, 13, QtWidgets.QTableWidgetItem(f'{round(np.std(final_od_matrix[row,:]),2)}'))  
+            # for row in range(8):
+            #     self.tab.table_OD.setItem(row, 12, QtWidgets.QTableWidgetItem(f'{round(np.mean(final_od_matrix[row,:]),2)}'))  
+            #     self.tab.table_OD.setItem(row, 13, QtWidgets.QTableWidgetItem(f'{round(np.std(final_od_matrix[row,:]),2)}'))  
             
             self.wells_panel.radio_buttons['A1'].setChecked(True)
             self.plot_dict()
@@ -474,17 +474,70 @@ class Methods(Messages):
             row = alphabet.index(letter_part)
             self.result_matrix[row, col] = self.result_fit_dtime[key]
         
+        # Putting the doubling times in the table
         self.tab.table.clearContents()
         for row in range(8):
             for col in range(12):
                 self.tab.table.setItem(row, col, QtWidgets.QTableWidgetItem(f'{self.result_matrix[row,col]}'))  
-        for col in range(12):
-            self.tab.table.setItem(8, col, QtWidgets.QTableWidgetItem(f'{round(np.mean(self.result_matrix[:,col]),2)}'))  
-            self.tab.table.setItem(9, col, QtWidgets.QTableWidgetItem(f'{round(np.std(self.result_matrix[:,col]),2)}'))  
-            
+                
+        
+        #Check the template to extract the well's name and to calculate the mean and standard deviation of each strain
+        wells_same_name_coords = dict()
         for row in range(8):
-            self.tab.table.setItem(row, 12, QtWidgets.QTableWidgetItem(f'{round(np.mean(self.result_matrix[row,:]),2)}'))  
-            self.tab.table.setItem(row, 13, QtWidgets.QTableWidgetItem(f'{round(np.std(self.result_matrix[row,:]),2)}')) 
+            for col in range(12):
+                well_name = self.tab.table_template.item(row,col).text()
+                dict_keys = list(wells_same_name_coords.keys())
+                if well_name in dict_keys:
+                    wells_same_name_coords[well_name].append([row,col])
+                elif well_name not in dict_keys:
+                    wells_same_name_coords[well_name] = []
+                    wells_same_name_coords[well_name].append([row,col])
+        
+            
+        
+        self.tab.table_stats.clearContents()
+        self.tab.table_stats.setAlternatingRowColors(True)
+        self.tab.table_stats.setColumnCount(len(dict_keys))
+        self.tab.table_stats.setRowCount(3)
+        self.tab.table_stats.setVerticalHeaderLabels(['Name of strain', 'Mean of doubling time', 'Standard deviation of mean'])
+        self.tab.table_stats.setHorizontalHeaderLabels([str(number) for number in range(1,1+len(dict_keys))])
+
+        # Getting the name of each well with its coordinates. Then calculate the mean and std for all wells with the same name
+        # The results are displayed in a new table.
+        for col, key in enumerate(dict_keys):
+            if key:
+                coords = wells_same_name_coords[key]
+                mean_list = []
+                std_list = []
+                for ii, jj in coords:
+                        mean_list.append(self.result_matrix[ii,jj])
+                        std_list.append(self.result_matrix[ii,jj])
+                        
+                mean = np.mean(mean_list)      
+                std = np.std(std_list)
+                self.tab.table_stats.setItem(0, col, QtWidgets.QTableWidgetItem(f'{key}'))
+                self.tab.table_stats.setItem(1, col, QtWidgets.QTableWidgetItem(f'{round(mean,2)}'))
+                self.tab.table_stats.setItem(2, col, QtWidgets.QTableWidgetItem(f'{round(std,2)}'))
+            elif not key:
+                coords = wells_same_name_coords[key]
+                mean_list = []
+                std_list = []
+                for ii, jj in coords:
+                        mean_list.append(self.result_matrix[ii,jj])
+                        std_list.append(self.result_matrix[ii,jj])
+                        
+                mean = np.mean(mean_list)      
+                std = np.std(std_list)
+                self.tab.table_stats.setItem(0, col, QtWidgets.QTableWidgetItem('Wells with no Name'))
+                self.tab.table_stats.setItem(1, col, QtWidgets.QTableWidgetItem(f'{round(mean,2)}'))
+                self.tab.table_stats.setItem(2, col, QtWidgets.QTableWidgetItem(f'{round(std,2)}'))
+        
+        
+   
+        self.tab.layout_table_dtimes.addWidget(self.tab.table_stats)
+        
+        
+
                 
         self.plot_OD()
         self.done_message.exec_()

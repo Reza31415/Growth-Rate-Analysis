@@ -88,8 +88,8 @@ class MainWindow(QtWidgets.QMainWindow, Methods, Messages):
         self.tab.btn_same_time_window.triggered.connect(self.update_time_window)
         self.tab.slider.valueChanged.connect(self.set_s)
         self.tab.btn_push.clicked.connect(self.deselect_all)
-        
         self.tab.slider.valueChanged.connect(self.plot_derivatives)
+        
         
         # A Qt grid layout which holds all the elements of GUI
         self.layout = QtWidgets.QGridLayout()

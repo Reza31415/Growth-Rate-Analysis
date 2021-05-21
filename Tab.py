@@ -61,20 +61,50 @@ class Tab(QtWidgets.QMainWindow, Methods):
         # End of the elements of plot derivative tab
         # +++++++++++++++++++++++++++++++
         
-        # Elements of table tab
+        
+        # Elements of table tab. This table holds the the strain name of each well
+        # +++++++++++++++++++++++++++
+        self.table_template = QtWidgets.QTableWidget()
+        self.table_template.setAlternatingRowColors(True)
+        self.table_template.setRowCount(8)
+        self.table_template.setColumnCount(12)
+        self.table_template.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+        self.table_template.setVerticalHeaderLabels(list(string.ascii_uppercase)[0:8])
+        self.table_template.setHorizontalHeaderLabels([str(number) for number in range(1,13)])
+        for row in range(8):
+            for col in range(12):
+                self.table_template.setItem(row,col,QtWidgets.QTableWidgetItem())
+        # self.table_template.setItem(0,0,QtWidgets.QTableWidgetItem('Double click to edit'))
+        self.label_template = QtWidgets.QLabel()
+        self.label_template.setText('The above table is a template to give each well a name, for example, the name of strain in that well. Double click on each well to edit.')
+        
+        # End of elements of table tab
+        # +++++++++++++++++++++++++++
+        
+        
+        self.table_stats = QtWidgets.QTableWidget()
+        
+        
+        # Elements of table tab. This table holds the doubling times
         # +++++++++++++++++++++++++++
         self.table = QtWidgets.QTableWidget()
+        self.table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.table.setAlternatingRowColors(True)
-        self.table.setRowCount(10)
-        self.table.setColumnCount(14)
+        self.table.setRowCount(8)
+        self.table.setColumnCount(12)
         self.table.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-        self.table.setVerticalHeaderLabels(list(string.ascii_uppercase)[0:8]+['Mean', 'Std'])
-        self.table.setHorizontalHeaderLabels([str(number) for number in range(1,13)]+['Mean', 'Std'])
+        self.table.setVerticalHeaderLabels(list(string.ascii_uppercase)[0:8])
+        self.table.setHorizontalHeaderLabels([str(number) for number in range(1,13)])
         
         self.label_dtime = QtWidgets.QLabel()
         self.label_dtime.setText('The doubling times are in minutes')
         
         self.layout_table_dtimes = QtWidgets.QVBoxLayout()
+        
+
+        
+        self.layout_table_dtimes.addWidget(self.table_template)
+        self.layout_table_dtimes.addWidget(self.label_template)
         self.layout_table_dtimes.addWidget(self.table)
         self.layout_table_dtimes.addWidget(self.label_dtime)
         
@@ -83,15 +113,25 @@ class Tab(QtWidgets.QMainWindow, Methods):
         # End of elements of table tab
         # +++++++++++++++++++++++++++
         
+        # Start of a grid of QLabel to show the statistics of each strain
+        # +++++++++++++++++++++++++++++++++++++++
         
-        # Elements of table tab
+
+        
+       
+        
+        
+        # End of statistics for each strain
+        # +++++++++++++++++++++++++++++++
+        
+        # Elements of table tab. This table holds the final OD
         # +++++++++++++++++++++++++++
         self.table_OD = QtWidgets.QTableWidget()
         self.table_OD.setAlternatingRowColors(True)
-        self.table_OD.setRowCount(10)
-        self.table_OD.setColumnCount(14)
-        self.table_OD.setVerticalHeaderLabels(list(string.ascii_uppercase)[0:8]+['Mean', 'Std'])
-        self.table_OD.setHorizontalHeaderLabels([str(number) for number in range(1,13)]+['Mean', 'Std'])
+        self.table_OD.setRowCount(8)
+        self.table_OD.setColumnCount(12)
+        self.table_OD.setVerticalHeaderLabels(list(string.ascii_uppercase)[0:8])
+        self.table_OD.setHorizontalHeaderLabels([str(number) for number in range(1,13)])
         self.label_OD = QtWidgets.QLabel()
         self.label_OD.setText('The table shows the average of last five data point as the final OD')
         self.layout_table_OD = QtWidgets.QVBoxLayout()
@@ -138,7 +178,7 @@ class Tab(QtWidgets.QMainWindow, Methods):
         # ++++++++++++++++++++++++++++++++++++++++++
         
        
-        # Adding the tab_widget to the tab
+        # Adding the tab_widget to the tab. The tab object only accepts widgets, not layouts!
         self.tab.addTab(self.tab_plot_derivatives, 'Plot of derivatives')
         self.tab.addTab(self.table_dtimes_widget, 'Doubling times')
         self.tab.addTab(self.widget_layout_canvas_temp, 'Plot of temperature')
