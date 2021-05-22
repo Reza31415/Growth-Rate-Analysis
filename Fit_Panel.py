@@ -34,11 +34,15 @@ class Fit_Panel(QtWidgets.QMainWindow, Messages):
         self.btn_start_fit = QtWidgets.QPushButton('Start fitting')
         self.btn_brows = QtWidgets.QPushButton('Import Data')
         self.btn_reset_tw = QtWidgets.QPushButton('Reset time windows')
+        self.btn_load_template = QtWidgets.QPushButton('Load template')
+        self.btn_save_template = QtWidgets.QPushButton('Save template')
 
         
         self.layout = QtWidgets.QGridLayout()
         self.layout.addWidget(self.btn_start_fit,0,0)
         self.layout.addWidget(self.btn_brows,0,1)
+        self.layout.addWidget(self.btn_load_template,1,1)
+        self.layout.addWidget(self.btn_save_template,2,1)
         self.layout.addWidget(self.btn_reset_tw, 1,0)
         
         

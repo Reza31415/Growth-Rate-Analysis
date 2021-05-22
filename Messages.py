@@ -24,3 +24,8 @@ class Messages():
         self.error_msg_no_data = QtWidgets.QMessageBox()
         self.error_msg_no_data.setText('Please click brows button and select the xlsx file!')
         self.error_msg_no_data.setWindowTitle('Error!')
+        # The erros associated with importing the template.
+        self.error_load_template = QtWidgets.QMessageBox()
+        self.error_load_template.setText(f"An error has happened. Check if the imported template follows the desired format. See documentation")
+                                           
+        self.error_load_template.setWindowTitle('Error!')

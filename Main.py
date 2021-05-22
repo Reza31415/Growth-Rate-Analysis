@@ -60,6 +60,8 @@ class MainWindow(QtWidgets.QMainWindow, Methods, Messages):
         self.fit_panel = Fit_Panel.Fit_Panel()  
         #self.btn_show_heat_map = QtWidgets.QPushButton('Show the heat map of doubling times')
         self.fit_panel.btn_brows.clicked.connect(self.run_brows)
+        self.fit_panel.btn_load_template.clicked.connect(self.load_template)
+        self.fit_panel.btn_save_template.clicked.connect(self.save_template)
         self.fit_panel.btn_reset_tw.clicked.connect(self.reset_time_window)
 
         #If the brows button is pushed, after finding the file, it retirves the measurement data

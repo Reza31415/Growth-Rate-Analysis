@@ -9,6 +9,7 @@ from scipy.interpolate import UnivariateSpline
 from scipy.signal import argrelextrema
 from scipy.optimize import curve_fit
 import numpy as np
+import pandas as pd
 import datetime
 from Messages import Messages
 import string
@@ -305,7 +306,33 @@ class Methods(Messages):
                             self.plot_selection_in_red(key)
                     # except KeyError:
                     #     pass
-           
+     
+        
+    def load_template(self):
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Single File', os.getcwd() , 'XML Files (*.xlsx)')
+        
+        col_names = [str(i) for i in range(0,13)]
+        try:
+            try:
+                # The first column contains the row letters
+                df = pd.read_excel(filename, names = col_names)
+                detect_nan = df.isnull()
+                for col in range(12):
+                    for row in range(8):
+                        if not detect_nan[f'{col+1}'][row]:
+                            cell_item = df[f'{col+1}'][row]
+                            self.tab.table_template.setItem(row,col, QtWidgets.QTableWidgetItem(cell_item))
+                        else:
+                            pass
+            except FileNotFoundError:
+                pass
+        except Exception:
+            self.error_load_template.exec_()
+            
+        
+    def save_template(self):
+        filename = QtWidgets.QFileDialog.getSaveFileName(None, 'Single File', os.getcwd() , 'XML Files (*.xlsx)')
+        print(filename)
  
     def run_brows(self):
         self.filename, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Single File', os.getcwd() , 'XML Files (*.xlsx)')
@@ -335,15 +362,7 @@ class Methods(Messages):
                     final_od_matrix[row, col] = self.dict_final_OD[key]
                     
                     
-            
-            # for col in range(12):
-            #     self.tab.table_OD.setItem(8, col, QtWidgets.QTableWidgetItem(f'{round(np.mean(final_od_matrix[:,col]),2)}'))  
-            #     self.tab.table_OD.setItem(9, col, QtWidgets.QTableWidgetItem(f'{round(np.std(final_od_matrix[:,col]),2)}'))  
-                
-            # for row in range(8):
-            #     self.tab.table_OD.setItem(row, 12, QtWidgets.QTableWidgetItem(f'{round(np.mean(final_od_matrix[row,:]),2)}'))  
-            #     self.tab.table_OD.setItem(row, 13, QtWidgets.QTableWidgetItem(f'{round(np.std(final_od_matrix[row,:]),2)}'))  
-            
+
             self.wells_panel.radio_buttons['A1'].setChecked(True)
             self.plot_dict()
             self.plot_OD()
