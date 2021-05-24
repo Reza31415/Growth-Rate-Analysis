@@ -27,5 +27,8 @@ class Messages():
         # The erros associated with importing the template.
         self.error_load_template = QtWidgets.QMessageBox()
         self.error_load_template.setText(f"An error has happened. Check if the imported template follows the desired format. See documentation")
-                                           
         self.error_load_template.setWindowTitle('Error!')
+        # Message after saving the results on the disk
+        self.results_saved_msg = QtWidgets.QMessageBox()
+        self.results_saved_msg.setText('The results have been saved on disk!')
+        self.results_saved_msg.setWindowTitle('Done!')

@@ -156,7 +156,7 @@ class Methods(Messages):
         plot_handles = set()
         for key in self.tab.wells_panel_mplots.check_boxes:
             if self.tab.wells_panel_mplots.check_boxes[key].isChecked():
-                print(key)
+                
                 self.dict_multi_plot[key].set_visible(True)
                 plot_labels.add(key)
                 plot_handles.add(self.dict_multi_plot[key])
@@ -314,7 +314,7 @@ class Methods(Messages):
         col_names = [str(i) for i in range(0,13)]
         try:
             try:
-                # The first column contains the row letters
+                # The first column contains the row letters which is has zero index
                 df = pd.read_excel(filename, names = col_names)
                 detect_nan = df.isnull()
                 for col in range(12):
@@ -332,7 +332,7 @@ class Methods(Messages):
         
     def save_template(self):
         filename = QtWidgets.QFileDialog.getSaveFileName(None, 'Single File', os.getcwd() , 'XML Files (*.xlsx)')
-        print(filename)
+        
  
     def run_brows(self):
         self.filename, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Single File', os.getcwd() , 'XML Files (*.xlsx)')
@@ -427,7 +427,19 @@ class Methods(Messages):
                 mean_OD = np.mean(data[-5:])
                 self.dict_final_OD[key] = round(mean_OD,2)
                 
+     
         
+    def save_results(self):
+        self.text_file_name = str(datetime.datetime.now()) 
+        self.text_file_name = self.text_file_name[0:-7] 
+        self.text_file_name = self.text_file_name.replace(':', '-')
+        self.text_file_name = self.text_file_name.replace(' ', '_')
+        with open(f'fitting_results_{self.text_file_name}.txt','w') as text_file:
+            text_file.write('The doubling times are in minutes\n')
+            for key in self.result_fit_dtime:
+                text_file.writelines(f'{key}:{self.result_fit_dtime[key]}\n')
+                
+        self.results_saved_msg.exec_()
 
     #The model for exponential growth. There are three parameters, amp is the amplitude, rate the rate of 
     # growth multiplied by log(2) to convert it to doubling rate, and the bg as the background
@@ -450,54 +462,69 @@ class Methods(Messages):
         # If the use has not asked for the same time window for all the wells proceeds
         if not self.tab.btn_same_time_window.isChecked():
             for key in self.dict_time_window:
-                time_fit = self.fit_panel.data_object.time
-                data_fit = self.fit_panel.data_object.data_dict[key]
-                min_index_temp = self.dict_time_window[key][0]
-                max_index_temp = self.dict_time_window[key][1]
-                time_fit = time_fit[min_index_temp:max_index_temp]
-                data_fit = data_fit[min_index_temp:max_index_temp]
-                popt_temp, pcov_temp = curve_fit(model, time_fit, data_fit, p0 = [0.001, 1/90, 0.098], maxfev = 8000, bounds = ([0,0,0],[np.inf, np.inf, np.inf]))
-                self.result_fit_dtime[key] = round(1/popt_temp[1],1)
-                self. result_fit_params[key] = popt_temp
+                row_name_template = self.alphabet.index(key[0])
+                #Name of the columns are from 1 to 12, but there index is from0 to 11
+                col_name_template = int(key[1:])-1
+                #Skip fitting wells which has media
+                well_name_template = self.tab.table_template.item(row_name_template, col_name_template).text()[0:5]
+                if not well_name_template == 'media' and not well_name_template == 'empty':
                 
-        elif self.tab.btn_same_time_window.isChecked():
-            for letter in self.alphabet:
-                for number in range(1,13):
-                    key = f'{letter}{number}'
                     time_fit = self.fit_panel.data_object.time
                     data_fit = self.fit_panel.data_object.data_dict[key]
-                    min_index_temp = self.same_time_window[0]
-                    max_index_temp = self.same_time_window[1]
+                    min_index_temp = self.dict_time_window[key][0]
+                    max_index_temp = self.dict_time_window[key][1]
                     time_fit = time_fit[min_index_temp:max_index_temp]
                     data_fit = data_fit[min_index_temp:max_index_temp]
                     popt_temp, pcov_temp = curve_fit(model, time_fit, data_fit, p0 = [0.001, 1/90, 0.098], maxfev = 8000, bounds = ([0,0,0],[np.inf, np.inf, np.inf]))
                     self.result_fit_dtime[key] = round(1/popt_temp[1],1)
                     self. result_fit_params[key] = popt_temp
+                    
+                else:
+                    pass
+                
+        elif self.tab.btn_same_time_window.isChecked():
+            for letter in self.alphabet:
+                for number in range(1,13):
+                    row_name_template = self.alphabet.index(letter)
+                    col_name_template = number
+                    #Skip fitting wells which has media
+                    well_name_template = self.tab.table_template.item(row_name_template, col_name_template).text()[0:5]
+                    if not well_name_template == 'media' and not well_name_template == 'empty':
+                        key = f'{letter}{number}'
+                        time_fit = self.fit_panel.data_object.time
+                        data_fit = self.fit_panel.data_object.data_dict[key]
+                        min_index_temp = self.same_time_window[0]
+                        max_index_temp = self.same_time_window[1]
+                        time_fit = time_fit[min_index_temp:max_index_temp]
+                        data_fit = data_fit[min_index_temp:max_index_temp]
+                        popt_temp, pcov_temp = curve_fit(model, time_fit, data_fit, p0 = [0.001, 1/90, 0.098], maxfev = 8000, bounds = ([0,0,0],[np.inf, np.inf, np.inf]))
+                        self.result_fit_dtime[key] = round(1/popt_temp[1],1)
+                        self. result_fit_params[key] = popt_temp
+                        
+                    else:
+                        pass
 
          
-        self.text_file_name = str(datetime.datetime.now()) 
-        self.text_file_name = self.text_file_name[0:-7] 
-        self.text_file_name = self.text_file_name.replace(':', '-')
-        self.text_file_name = self.text_file_name.replace(' ', '_')
-        with open(f'fitting_results_{self.text_file_name}.txt','w') as text_file:
-            text_file.write('The doubling times are in minutes\n')
-            for key in self.result_fit_dtime:
-                text_file.writelines(f'{key}:{self.result_fit_dtime[key]}\n')
+
         
           
         self.result_fit_dtime_values = self.result_fit_dtime.values()
         self.result_matrix = np.zeros((8,12))
+        self.final_OD_matrix = np.zeros((8,12))
         for key in self.result_fit_dtime:
             letter_part = key[0]
             col = int(key[1:])-1
             row = alphabet.index(letter_part)
             self.result_matrix[row, col] = self.result_fit_dtime[key]
+            
         
         # Putting the doubling times in the table
         self.tab.table.clearContents()
-        for row in range(8):
-            for col in range(12):
-                self.tab.table.setItem(row, col, QtWidgets.QTableWidgetItem(f'{self.result_matrix[row,col]}'))  
+        
+        for key in self.result_fit_dtime:
+            row = alphabet.index(key[0])
+            col = int(key[1:])-1
+            self.tab.table.setItem(row, col, QtWidgets.QTableWidgetItem(f'{self.result_fit_dtime[key]}'))  
                 
         
         #Check the template to extract the well's name and to calculate the mean and standard deviation of each strain
@@ -506,9 +533,9 @@ class Methods(Messages):
             for col in range(12):
                 well_name = self.tab.table_template.item(row,col).text()
                 dict_keys = list(wells_same_name_coords.keys())
-                if well_name in dict_keys:
+                if well_name in dict_keys and not well_name[0:5] == 'media' and not well_name == 'empty':
                     wells_same_name_coords[well_name].append([row,col])
-                elif well_name not in dict_keys:
+                elif well_name not in dict_keys and not well_name[0:5] == 'media' and not well_name == 'empty':
                     wells_same_name_coords[well_name] = []
                     wells_same_name_coords[well_name].append([row,col])
         
@@ -517,39 +544,54 @@ class Methods(Messages):
         self.tab.table_stats.clearContents()
         self.tab.table_stats.setAlternatingRowColors(True)
         self.tab.table_stats.setColumnCount(len(dict_keys))
-        self.tab.table_stats.setRowCount(3)
-        self.tab.table_stats.setVerticalHeaderLabels(['Name of strain', 'Mean of doubling time', 'Standard deviation of mean'])
+        self.tab.table_stats.setRowCount(5)
+        self.tab.table_stats.setVerticalHeaderLabels(['Name of strain', 'Mean of doubling time', 'Standard deviation of mean', 'Mean of final OD (last 5 points)', 'Standard deviation of mean'])
         self.tab.table_stats.setHorizontalHeaderLabels([str(number) for number in range(1,1+len(dict_keys))])
 
         # Getting the name of each well with its coordinates. Then calculate the mean and std for all wells with the same name
         # The results are displayed in a new table.
         for col, key in enumerate(dict_keys):
-            if key:
+            
+            if key and not key[0:5] == 'media' and not key == 'empty':
                 coords = wells_same_name_coords[key]
-                mean_list = []
-                std_list = []
+                list_dtimes = []
+                list_final_OD = []
+               
                 for ii, jj in coords:
-                        mean_list.append(self.result_matrix[ii,jj])
-                        std_list.append(self.result_matrix[ii,jj])
+                    #If the cell is not empty gets the doubling times
+                    if self.tab.table.item(ii,jj).text():
+                        list_dtimes.append(float(self.tab.table.item(ii,jj).text()))
+                    #If the cell is not empty gets the OD
+                    if self.tab.table_OD.item(ii,jj).text():
+                        list_final_OD.append(float(self.tab.table_OD.item(ii,jj).text()))
                         
-                mean = np.mean(mean_list)      
-                std = np.std(std_list)
+                mean_dtime = np.mean(list_dtimes)      
+                std_dtime = np.std(list_dtimes)
+                mean_final_OD = np.mean(list_final_OD)
+                std_final_OD = np.std(list_final_OD)
                 self.tab.table_stats.setItem(0, col, QtWidgets.QTableWidgetItem(f'{key}'))
-                self.tab.table_stats.setItem(1, col, QtWidgets.QTableWidgetItem(f'{round(mean,2)}'))
-                self.tab.table_stats.setItem(2, col, QtWidgets.QTableWidgetItem(f'{round(std,2)}'))
+                self.tab.table_stats.setItem(1, col, QtWidgets.QTableWidgetItem(f'{round(mean_dtime,2)}'))
+                self.tab.table_stats.setItem(2, col, QtWidgets.QTableWidgetItem(f'{round(std_dtime,2)}'))
+                self.tab.table_stats.setItem(3, col, QtWidgets.QTableWidgetItem(f'{round(mean_final_OD,2)}'))
+                self.tab.table_stats.setItem(4, col, QtWidgets.QTableWidgetItem(f'{round(std_final_OD,2)}'))
+                
             elif not key:
                 coords = wells_same_name_coords[key]
-                mean_list = []
-                std_list = []
+                list_dtimes = []
+                list_final_OD = []
                 for ii, jj in coords:
-                        mean_list.append(self.result_matrix[ii,jj])
-                        std_list.append(self.result_matrix[ii,jj])
+                        list_dtimes.append(float(self.tab.table.item(ii,jj).text()))
+                        list_final_OD.append(float(self.tab.table_OD.item(ii,jj).text()))
                         
-                mean = np.mean(mean_list)      
-                std = np.std(std_list)
+                mean_dtime = np.mean(list_dtimes)      
+                std_dtime = np.std(list_dtimes)
+                mean_final_OD = np.mean(list_final_OD)
+                std_final_OD = np.std(list_final_OD)
                 self.tab.table_stats.setItem(0, col, QtWidgets.QTableWidgetItem('Wells with no Name'))
-                self.tab.table_stats.setItem(1, col, QtWidgets.QTableWidgetItem(f'{round(mean,2)}'))
-                self.tab.table_stats.setItem(2, col, QtWidgets.QTableWidgetItem(f'{round(std,2)}'))
+                self.tab.table_stats.setItem(1, col, QtWidgets.QTableWidgetItem(f'{round(mean_dtime,2)}'))
+                self.tab.table_stats.setItem(2, col, QtWidgets.QTableWidgetItem(f'{round(std_dtime,2)}'))
+                self.tab.table_stats.setItem(3, col, QtWidgets.QTableWidgetItem(f'{round(mean_final_OD,2)}'))
+                self.tab.table_stats.setItem(4, col, QtWidgets.QTableWidgetItem(f'{round(std_final_OD,2)}'))
         
         
    
