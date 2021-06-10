@@ -1,6 +1,6 @@
 # Introduction
 This is a GUI made using PyQt5 to calculate the doubling time of yeast while they grow exponentially. 
-You must have PyQt5, Numpy, Scipy, Matplotlib, and Pandas installed to use this GUI. To run the GUI, execute the code in the `main.py`file.
+You must have PyQt5, Numpy, Scipy, Matplotlib, xlrd, and Pandas installed to use this GUI. To run the GUI, execute the code in the `main.py`file.
 The GUI reads the xlsx files exported by Biotek Gen5 software.
 If you modify the code in Data.py, you can use xlsx files formatted in a different way.
 
