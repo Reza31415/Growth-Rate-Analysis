@@ -559,7 +559,7 @@ class Methods(Messages):
                
                 for ii, jj in coords:
                     #If the cell is not empty gets the doubling times
-                    if self.tab.table.item(ii,jj).text():
+                    if self.tab.table.item(ii,jj) != None and self.tab.table.item(ii,jj).text():
                         list_dtimes.append(float(self.tab.table.item(ii,jj).text()))
                     #If the cell is not empty gets the OD
                     if self.tab.table_OD.item(ii,jj).text():
@@ -580,6 +580,7 @@ class Methods(Messages):
                 list_dtimes = []
                 list_final_OD = []
                 for ii, jj in coords:
+                    if self.tab.table.item(ii,jj) != None:
                         list_dtimes.append(float(self.tab.table.item(ii,jj).text()))
                         list_final_OD.append(float(self.tab.table_OD.item(ii,jj).text()))
                         
